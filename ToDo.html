@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Todo List</title>
+  <link rel="stylesheet" href="ToDoStyles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Todo List</h1>
+    <form id="todo-form">
+      <input type="text" id="todo-input" placeholder="Add new todo">
+      <button type="submit">Add</button>
+    </form>
+    <ul id="todo-list">
+      <li>
+        <input type="checkbox" id="todo3">
+        <label for="todo3">Do homework</label>
+      </li>
+    </ul>
+  </div>
+  <script>
+    const form = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+    let todoCount = 1;
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const todoText = todoInput.value.trim();
+      if (todoText !== '') {
+        todoCount++;
+        const li = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'todo' + todoCount;
+        const label = document.createElement('label');
+        label.htmlFor = checkbox.id;
+        label.textContent = todoText;
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        todoList.appendChild(li);
+        todoInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

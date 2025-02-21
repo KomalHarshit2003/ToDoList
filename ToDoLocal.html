@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo List with Local Storage</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      width: 350px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    form input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+    }
+    form button {
+      padding: 10px;
+      border: none;
+      background: #ff7f50;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 0 4px 4px 0;
+      transition: background 0.3s ease;
+    }
+    form button:hover {
+      background: #ff6347;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    li input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    li label {
+      font-size: 18px;
+      color: #555;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    li input[type="checkbox"]:checked + label {
+      text-decoration: line-through;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Todo List</h1>
+    <form id="todo-form">
+      <input type="text" id="todo-input" placeholder="Add new todo">
+      <button type="submit">Add</button>
+    </form>
+    <ul id="todo-list"></ul>
+  </div>
+  <script>
+    let todos = JSON.parse(localStorage.getItem('todos')) || [];
+    const form = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+    function renderTodos() {
+      todoList.innerHTML = '';
+      todos.forEach(function(todo) {
+        const li = document.createElement('li');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = todo.id;
+        checkbox.checked = todo.completed;
+        checkbox.addEventListener('change', function() {
+          todo.completed = checkbox.checked;
+          localStorage.setItem('todos', JSON.stringify(todos));
+          renderTodos();
+        });
+        const label = document.createElement('label');
+        label.htmlFor = todo.id;
+        label.textContent = todo.text;
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        todoList.appendChild(li);
+      });
+    }
+    renderTodos();
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      if(text !== '') {
+        const newTodo = { id: 'todo' + Date.now(), text: text, completed: false };
+        todos.push(newTodo);
+        localStorage.setItem('todos', JSON.stringify(todos));
+        renderTodos();
+        todoInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
